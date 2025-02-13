@@ -6,37 +6,42 @@
         xmlns:local="clr-namespace:Oil_Consumption_Tracker"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="6*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" HorizontalAlignment="Left" Margin="25,0,0,0" TextWrapping="Wrap" Text="OCT — Oil Consumption Tracker" VerticalAlignment="Center" FontSize="36" FontFamily="Segoe UI"/>
-        <Separator Grid.Row="1" Height="2" Background="Black"  Margin="0,5"/>
-        <Separator Grid.Row="3" Height="2" Background="Black" />
-        <Button Grid.Row="2" Content="Lisää auto" HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center"/>
-        <DataGrid Grid.Row="4" ItemsSource="{Binding autot}"
-                  AutoGenerateColumns="False"
-                  Name="AutoDataGrid"
-                  RowDetailsVisibilityMode="VisibleWhenSelected">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding rekisteriNumero}" />
-            </DataGrid.Columns>
-            <DataGrid.RowDetailsTemplate>
-                <DataTemplate>
-                    <DataGrid ItemsSource="{Binding mittaukset}"
-                              AutoGenerateColumns="False"
-                              Margin="20,0,0,0">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oljynMaara}" />
-                            <DataGridTextColumn Header="Päiväys" Binding="{Binding paivays}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>
-        </DataGrid>
+    <Grid x:Name="rootWindow">
+        <Grid x:Name="mainMenuWindow" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" HorizontalAlignment="Left" Margin="25,0,0,0" TextWrapping="Wrap" Text="OCT — Oil Consumption Tracker" VerticalAlignment="Center" FontSize="36" FontFamily="Segoe UI"/>
+            <Separator Grid.Row="1" Height="2" Background="Black"  Margin="0,5"/>
+            <Separator Grid.Row="3" Height="2" Background="Black" />
+            <Button Grid.Row="2" Content="Lisää auto" Tag="addCarWindow" Click="OpenWindow"  HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center"/>
+            <DataGrid Grid.Row="4" ItemsSource="{Binding autot}"
+                      AutoGenerateColumns="False"
+                      Name="AutoDataGrid"
+                      RowDetailsVisibilityMode="VisibleWhenSelected">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding rekisteriNumero}" />
+                </DataGrid.Columns>
+                <DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <DataGrid ItemsSource="{Binding mittaukset}"
+                                  AutoGenerateColumns="False"
+                                  Margin="20,0,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oljynMaara}" />
+                                <DataGridTextColumn Header="Päiväys" Binding="{Binding paivays}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>
+            </DataGrid>
+        </Grid>
+        <Grid x:Name="addCarWindow" Visibility="Collapsed">
+            <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        </Grid>
     </Grid>
 </Window>

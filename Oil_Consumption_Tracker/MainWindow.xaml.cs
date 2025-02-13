@@ -45,13 +45,15 @@ namespace Oil_Consumption_Tracker
     {
 
         public List<Auto> autot { get; set; } = new List<Auto>();
-        
+        public Grid currentWindow;
+
         public MainWindow()
         {
-            DataContext = this;
-
             deserialize();
             InitializeComponent();
+            currentWindow = mainMenuWindow;
+
+            DataContext = this;
 
             Auto auto1 = new Auto("KJE-123");
             autot.Add(auto1);
@@ -73,6 +75,35 @@ namespace Oil_Consumption_Tracker
         void serialize()
         {
 
+        }
+
+        private void OpenWindow(string name) //Koodilla kutsuttava
+        {
+            changeWindowVisibility(currentWindow, false);
+            currentWindow = this.FindName(name) as Grid;
+            changeWindowVisibility(currentWindow, true);
+        }
+
+        private void OpenWindow(object sender, RoutedEventArgs e) // WPF:n napilla kutsuttava
+        {
+            changeWindowVisibility(currentWindow, false);
+            currentWindow = this.FindName((string)((Button)sender).Tag) as Grid;
+            changeWindowVisibility(currentWindow, true);
+        }
+
+        private void changeWindowVisibility(Grid window, bool setVisible)
+        {
+            if (currentWindow != null)
+            {
+                if(setVisible)
+                {
+                    currentWindow.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    currentWindow.Visibility = Visibility.Collapsed;
+                }
+            }
         }
     }
 }
