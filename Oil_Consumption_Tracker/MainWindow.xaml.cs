@@ -13,39 +13,41 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Oil_Consumption_Tracker
 {
-    public class Auto
+    public class Car
     {
-        public string rekisteriNumero { get; set; }
-        public List<Mittaus> mittaukset { get; set; } = new List<Mittaus>();
+        public string registerNumber { get; set; }
+        public List<Measurement> measurements { get; set; } = new List<Measurement>();
 
-        public Auto(string rekisteriNumero)
+        public Car(string registerNumber)
         {
-            this.rekisteriNumero = rekisteriNumero;
+            this.registerNumber = registerNumber;
         }
     }
 
-    public class Mittaus
+    public class Measurement
     {
-        public double oljynMaara { get; set; }
-        public DateTime paivays { get; set; }
-        public Auto auto { get; set; }
+        public double oilAmount { get; set; }
+        public DateTime date { get; set; }
+        public Car car { get; set; }
 
-        public Mittaus(double oljynMaara, Auto auto)
+        public Measurement(double oljynMaara, Car Car)
         {
-            this.oljynMaara = oljynMaara;
-            this.auto = auto;
-            this.paivays = DateTime.Now;
+            this.oilAmount = oljynMaara;
+            this.car = Car;
+            this.date = DateTime.Now;
         }
     }
 
     public partial class MainWindow : Window
     {
 
-        public List<Auto> autot { get; set; } = new List<Auto>();
+        public List<Car> cars { get; set; } = new List<Car>();
         public Grid currentWindow;
+        public double graphMaxHeight = 15;
 
         public MainWindow()
         {
@@ -55,16 +57,26 @@ namespace Oil_Consumption_Tracker
 
             DataContext = this;
 
-            Auto auto1 = new Auto("KJE-123");
-            autot.Add(auto1);
-            auto1.mittaukset.Add(new Mittaus(5.3, auto1));
-            auto1.mittaukset.Add(new Mittaus(4.7, auto1));
-            auto1.mittaukset.Add(new Mittaus(3.9, auto1));
+            TestiArvot();
+        }
 
-            Auto auto2 = new Auto("FIS-344");
-            autot.Add(auto2);
-            auto2.mittaukset.Add(new Mittaus(10.4, auto2));
-            auto2.mittaukset.Add(new Mittaus(8.2, auto2));
+        void TestiArvot()
+        {
+            Car car1 = new Car("KJE-123");
+            car1.measurements.Add(new Measurement(5.3, car1));
+            car1.measurements.Add(new Measurement(4.7, car1));
+            car1.measurements.Add(new Measurement(3.9, car1));
+            cars.Add(car1);
+
+            Car car2 = new Car("FIS-344");
+            car2.measurements.Add(new Measurement(10.4, car2));
+            car2.measurements.Add(new Measurement(8.2, car2));
+            car2.measurements.Add(new Measurement(2.1, car2));
+            car2.measurements.Add(new Measurement(4.2, car2));
+            car2.measurements.Add(new Measurement(0.2, car2));
+            cars.Add(car2);
+
+            ShowGrahp(car2);
         }
 
         void deserialize()
@@ -77,21 +89,21 @@ namespace Oil_Consumption_Tracker
 
         }
 
-        private void OpenWindow(string name) //Koodilla kutsuttava
+        private void OpenWindow(string name) //Called with a code
         {
-            changeWindowVisibility(currentWindow, false);
+            ChangeWindowVisibility(currentWindow, false);
             currentWindow = this.FindName(name) as Grid;
-            changeWindowVisibility(currentWindow, true);
+            ChangeWindowVisibility(currentWindow, true);
         }
 
-        private void OpenWindow(object sender, RoutedEventArgs e) // WPF:n napilla kutsuttava
+        private void OpenWindow(object sender, RoutedEventArgs e) // Called with WPF button
         {
-            changeWindowVisibility(currentWindow, false);
+            ChangeWindowVisibility(currentWindow, false);
             currentWindow = this.FindName((string)((Button)sender).Tag) as Grid;
-            changeWindowVisibility(currentWindow, true);
+            ChangeWindowVisibility(currentWindow, true);
         }
 
-        private void changeWindowVisibility(Grid window, bool setVisible)
+        private void ChangeWindowVisibility(Grid window, bool setVisible)
         {
             if (currentWindow != null)
             {
@@ -104,6 +116,16 @@ namespace Oil_Consumption_Tracker
                     currentWindow.Visibility = Visibility.Collapsed;
                 }
             }
+        }
+
+        void ShowGrahp(Car Car)
+        {
+            PointCollection grahpPoints = new PointCollection();
+            for (int i = 0; i < Car.measurements.Count; i++)
+            {
+                grahpPoints.Add(new Point(i * Grahp.Width / Car.measurements.Count, Car.measurements[i].oilAmount / graphMaxHeight * Grahp.Height));
+            }
+            Grahp.Points = grahpPoints;
         }
     }
 }
