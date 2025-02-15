@@ -7,44 +7,152 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid x:Name="rootWindow">
-        <Grid x:Name="mainMenuWindow" Visibility="Visible">
+        <Grid x:Name="mainMenuWindow" d:Visibility="Hidden"  Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="6*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="0.4*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" HorizontalAlignment="Left" Margin="25,0,0,0" TextWrapping="Wrap" Text="OCT — Oil Consumption Tracker" VerticalAlignment="Center" FontSize="36" FontFamily="Segoe UI"/>
-            <Separator Grid.Row="1" Height="2" Background="Black"  Margin="0,5"/>
-            <Separator Grid.Row="3" Height="2" Background="Black" />
-            <Button Grid.Row="2" Content="Lisää auto" Tag="addCarWindow" Click="OpenWindow"  HorizontalAlignment="Left" Margin="25,0,0,0" VerticalAlignment="Center"/>
-            <DataGrid Grid.Row="4" ItemsSource="{Binding autot}"
-                      AutoGenerateColumns="False"
-                      Name="AutoDataGrid"
-                      RowDetailsVisibilityMode="VisibleWhenSelected">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding rekisteriNumero}" />
-                </DataGrid.Columns>
-                <DataGrid.RowDetailsTemplate>
-                    <DataTemplate>
-                        <DataGrid ItemsSource="{Binding mittaukset}"
-                                  AutoGenerateColumns="False"
-                                  Margin="20,0,0,0">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oljynMaara}" />
-                                <DataGridTextColumn Header="Päiväys" Binding="{Binding paivays}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </DataTemplate>
-                </DataGrid.RowDetailsTemplate>
-            </DataGrid>
+
+            <Grid Grid.Row="0">
+                <TextBlock HorizontalAlignment="Center" Margin="25,0,0,0" TextWrapping="Wrap" Text="OCT — Oil Consumption Tracker" VerticalAlignment="Center" FontSize="36" FontFamily="Segoe UI"/>
+            </Grid>
+            
+            <Grid Grid.Row="1">
+                <Separator Height="2" Background="Black"  Margin="0,5"/>
+            </Grid>
+            
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="6, 10, 0, 10"
+                           HorizontalAlignment="Left" VerticalAlignment="Top" 
+                           Text="Autot" FontSize="24" />
+                <DataGrid Grid.Row="1" Grid.Column="0" ItemsSource="{Binding cars}"
+                          HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
+                            AutoGenerateColumns="False"
+                          SelectedItem="{Binding SelectedCar}"
+                            Name="AutoDataGrid"
+                            RowDetailsVisibilityMode="VisibleWhenSelected">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding registerNumber}" />
+                        <DataGridTextColumn Header="Valmistaja" />
+                        <DataGridTextColumn Header="Malli" />
+                        <DataGridTextColumn Header="Väri" />
+                        <DataGridTextColumn Header="Huomioita" />
+                    </DataGrid.Columns>
+                    
+                </DataGrid>
+
+                <Button Grid.Row="1" Grid.Column="1" Content="Lisää auto" Tag="addCarWindow" Click="OpenWindow"  HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" FontSize="30"/>
+                <Button Grid.Row="2" Grid.Column="0" Content="Näytä tiedot" Tag="graphWindow" Click="OpenWindow" Margin="0,0,0,0" HorizontalAlignment="Center" FontSize="15" />
+
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Separator Height="2" Background="Black" />
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="Päivitetty viimeksi xx.xx.xxxx" VerticalAlignment="Center"/>
+            </Grid>
+
         </Grid>
-        <Grid x:Name="addCarWindow" Visibility="Collapsed">
-            <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        
+        <Grid x:Name="addCarWindow" d:Visibility="Hidden" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="1.5*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBlock Text="Lisää uusi auto" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Rekisterinumero" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Valmistaja" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="2" Grid.Column="0" Content="Malli" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="3" Grid.Column="0" Content="Väri" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="4" Grid.Column="0" Content="Huomioita" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="5, 5, 120, 5" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Content="Peruuta" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
+                <Button Grid.Column="0" Content="Tallenna" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
+
+            </Grid>
+            
         </Grid>
-        <Grid x:Name="grahpWindow" Visibility="Collapsed">
-            <Polyline x:Name="Grahp" Stroke="Blue" StrokeThickness="4" Width="400" Height="200" Canvas.Left="200" Canvas.Top="117" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        
+        <Grid x:Name="graphWindow" d:Visibility="Visible" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock Text="Mittausdata: [Rekisterinumero haetaan]" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <DataGrid Grid.Column="0" ItemsSource="{Binding measurements}"
+                AutoGenerateColumns="False"
+                Margin="20,0,0,0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oilAmount}" />
+                        <DataGridTextColumn Header="Päiväys" Binding="{Binding date}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Polyline Grid.Column="1" x:Name="Grahp" Stroke="Blue" StrokeThickness="4" Width="400" Height="200" Canvas.Left="200" Canvas.Top="117" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid Grid.Row="2"  >
+                <Button Content="Lisää mittaus" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button Content="Muokkaa mittausta" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Content="Poista mittaus" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </Grid>
+
+
         </Grid>
     </Grid>
 </Window>
