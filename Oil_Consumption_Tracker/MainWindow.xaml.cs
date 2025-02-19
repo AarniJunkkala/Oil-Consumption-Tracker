@@ -69,7 +69,7 @@ namespace Oil_Consumption_Tracker
             auto2.mittaukset.Add(new Mittaus(8.2, auto2));
         }
 
-        void deserialize()
+        void Deserialize()
         {
             string filePath = "autot.json";
             if (File.Exists(filePath))
@@ -79,7 +79,7 @@ namespace Oil_Consumption_Tracker
             }
         }
 
-        void serialize()
+        void Serialize()
         {
             string filePath = "autot.json";
             string jsonString = JsonSerializer.Serialize(autot, new JsonSerializerOptions { WriteIndented = true });
