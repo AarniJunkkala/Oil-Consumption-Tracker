@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.Json;
+using System.IO;
 
 namespace Oil_Consumption_Tracker
 {
@@ -69,12 +71,19 @@ namespace Oil_Consumption_Tracker
 
         void deserialize()
         {
-
+            string filePath = "autot.json";
+            if (File.Exists(filePath))
+            {
+                string jsonString = File.ReadAllText(filePath);
+                autot = JsonSerializer.Deserialize<List<Auto>>(jsonString) ?? new List<Auto>();
+            }
         }
 
         void serialize()
         {
-
+            string filePath = "autot.json";
+            string jsonString = JsonSerializer.Serialize(autot, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, jsonString);
         }
 
         private void OpenWindow(string name) //Koodilla kutsuttava
