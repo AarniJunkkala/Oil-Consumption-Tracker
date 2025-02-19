@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.IO;
+using System.Text.Json;
 
 namespace Oil_Consumption_Tracker
 {
@@ -46,12 +48,12 @@ namespace Oil_Consumption_Tracker
     {
 
         public List<Car> cars { get; set; } = new List<Car>();
-        public Grid currentWindow;
-        public double graphMaxHeight = 15;
+        public Grid currentWindow; //The window that is currently visible.
+        public double graphMaxHeight = 15; 
 
         public MainWindow()
         {
-            deserialize();
+            Deserialize();
             InitializeComponent();
             currentWindow = mainMenuWindow;
 
@@ -79,20 +81,20 @@ namespace Oil_Consumption_Tracker
             ShowGrahp(car2);
         }
 
-        void deserialize()
+        void Deserialize()
         {
             string filePath = "autot.json";
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
-                autot = JsonSerializer.Deserialize<List<Auto>>(jsonString) ?? new List<Auto>();
+                cars = JsonSerializer.Deserialize<List<Car>>(jsonString) ?? new List<Car>();
             }
         }
 
-        void serialize()
+        void Serialize()
         {
             string filePath = "autot.json";
-            string jsonString = JsonSerializer.Serialize(autot, new JsonSerializerOptions { WriteIndented = true });
+            string jsonString = JsonSerializer.Serialize(cars, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(filePath, jsonString);
         }
 
