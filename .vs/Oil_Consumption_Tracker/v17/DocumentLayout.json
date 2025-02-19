@@ -28,9 +28,15 @@
               "RelativeDocumentMoniker": "Oil_Consumption_Tracker\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\amdmy\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml.cs",
               "RelativeToolTip": "Oil_Consumption_Tracker\\MainWindow.xaml.cs",
+<<<<<<< Updated upstream
               "ViewState": "AgIAAEQAAAAAAAAAAAAcwFAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-12T17:58:41.816Z",
+=======
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-12T18:01:32.073Z",
+>>>>>>> Stashed changes
               "EditorCaption": ""
             },
             {
@@ -42,7 +48,11 @@
               "ToolTip": "C:\\Users\\amdmy\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml",
               "RelativeToolTip": "Oil_Consumption_Tracker\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+<<<<<<< Updated upstream
               "WhenOpened": "2025-02-12T17:58:04.901Z"
+=======
+              "WhenOpened": "2025-02-12T18:01:22.024Z"
+>>>>>>> Stashed changes
             }
           ]
         }
