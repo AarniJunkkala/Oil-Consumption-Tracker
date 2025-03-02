@@ -17,7 +17,7 @@
             -small visual bug where the datagrid's leftmost column doesn't start from the left of the datagrid area and there is unnecessary empty space -->
     
     <Grid x:Name="rootWindow">
-        <Grid x:Name="mainMenuWindow" d:Visibility="Hidden"  Visibility="Visible">
+        <Grid x:Name="mainMenuWindow" d:Visibility="Visible"  Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="Auto"/>
@@ -59,8 +59,8 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding registerNumber}" />
                         <!-- three headers below need to binded to Car's properties like above + the properties need to be created for the car class if they don't exist yet -->
-                        <DataGridTextColumn Header="Valmistaja" />
-                        <DataGridTextColumn Header="Moottorikoodi" />
+                        <DataGridTextColumn Header="Valmistaja" Binding="{Binding manufacturer}"/>
+                        <DataGridTextColumn Header="Moottorikoodi" Binding="{Binding motorCode}"/>
                         <DataGridTextColumn Header="Lisätty" />
                     </DataGrid.Columns>
                     <!-- TO DO:
@@ -110,11 +110,11 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Content="Rekisterinumero" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
-                <TextBox Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <TextBox x:Name="addRegisterNumber" TextChanged="ValidateRegisternumber" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
                 <Label Grid.Row="1" Grid.Column="0" Content="Valmistaja" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <TextBox x:Name="addManufacturer" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
                 <Label Grid.Row="2" Grid.Column="0" Content="Moottorikoodi" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <TextBox x:Name="addMotorcode" Grid.Row="2" Grid.Column="1" Margin="5, 5, 120, 5" />
 
             </Grid>
 
@@ -127,16 +127,16 @@
                     TO DO: 
                     -add functionality to Tallenna button so that it saves the new car data 
                     -add functionality to Peruuta button so that it functions exactly like Takaisin button does and then remove Takaisin button -->
-                
-                <Button Grid.Column="1" Content="Peruuta" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
-                <Button Grid.Column="0" Content="Tallenna" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
+
+                <Button Grid.Column="1" Content="Peruuta" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
+                <Button IsEnabled="false" Grid.Column="0" Content="Tallenna" x:Name="saveCarButton" Click="AddCar" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
                 
             </Grid>
             
         </Grid>
 
         <!-- Data/graph window's visual inteface -->
-        <Grid x:Name="graphWindow" d:Visibility="Visible" Visibility="Collapsed">
+        <Grid x:Name="graphWindow" d:Visibility="Hidden" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="2*"/>

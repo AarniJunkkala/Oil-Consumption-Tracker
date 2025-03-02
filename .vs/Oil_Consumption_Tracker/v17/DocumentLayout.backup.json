@@ -1,13 +1,13 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\",
+  "WorkspaceRootPath": "D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\oil_consumption_tracker\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\oil_consumption_tracker\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|solutionrelative:oil_consumption_tracker\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|c:\\users\\tuomas\\documents\\github\\oil-consumption-tracker\\oil_consumption_tracker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|d:\\documents\\ohjelmointi\\oil-consumption-tracker\\oil_consumption_tracker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{DD7830C6-A4F8-4F66-8DF9-4FCC7D9913D2}|Oil_Consumption_Tracker\\Oil_Consumption_Tracker.csproj|solutionrelative:oil_consumption_tracker\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -18,31 +18,31 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "Oil_Consumption_Tracker\\MainWindow.xaml",
-              "ToolTip": "C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml",
-              "RelativeToolTip": "Oil_Consumption_Tracker\\MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-02-12T17:58:04.901Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "MainWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "Oil_Consumption_Tracker\\MainWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\Tuomas\\Documents\\GitHub\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml.cs",
+              "ToolTip": "D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml.cs",
               "RelativeToolTip": "Oil_Consumption_Tracker\\MainWindow.xaml.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAADwvxEAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAE4AAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-12T17:58:41.816Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "Oil_Consumption_Tracker\\MainWindow.xaml",
+              "ToolTip": "D:\\Documents\\Ohjelmointi\\Oil-Consumption-Tracker\\Oil_Consumption_Tracker\\MainWindow.xaml",
+              "RelativeToolTip": "Oil_Consumption_Tracker\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-02-12T17:58:04.901Z",
               "EditorCaption": ""
             }
           ]
