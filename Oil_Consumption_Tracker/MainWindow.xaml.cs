@@ -19,14 +19,15 @@ using System.Text.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
+
 namespace Oil_Consumption_Tracker
 {
-    public class Car
+    public class Car : INotifyPropertyChanged
     {
         public string registerNumber { get; set; } = "";
         public string manufacturer { get; set; } = "";
         public string motorCode { get; set; } = "";
-        public ObservableCollection<Measurement> measurements { get; set; } = new ObservableCollection<Measurement>();
+        public ObservableCollection<Measurement> _measurements { get; set; } = new ObservableCollection<Measurement>();
 
         public Car(string registerNumber, string manufacture = "No manufacturer found", string motorCode = "No motorcode found", ObservableCollection<Measurement> measurements = null)
         {
@@ -35,7 +36,7 @@ namespace Oil_Consumption_Tracker
             this.motorCode = motorCode;
             if(measurements != null)
             {
-                this.measurements = measurements;
+                this._measurements = measurements;
             }
         }
         public Car() { }
@@ -45,6 +46,22 @@ namespace Oil_Consumption_Tracker
             this.registerNumber = registerNumber;
             this.manufacturer = manufacture;
             this.motorCode = motorCode;
+        }
+
+        public ObservableCollection<Measurement> Measurements
+        {
+            get => _measurements;
+            set
+            {
+                _measurements = value;
+                OnPropertyChanged(nameof(Measurements));
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
@@ -101,11 +118,19 @@ namespace Oil_Consumption_Tracker
             get => _currentMeasurement;
             set
             {
+                if (_currentMeasurement == value) return;
+
                 _currentMeasurement = value;
-                EditMeasurementButton.IsEnabled = _currentMeasurement != null;
-                RemoveMeasurementButton.IsEnabled = _currentMeasurement != null;
+                if(_currentMeasurement == null)
+                {
+                    EditMeasurementButton.IsEnabled = false;
+                    RemoveMeasurementButton.IsEnabled = false;
+                }
+                
                 if(_currentMeasurement != null)
                 {
+                    EditMeasurementButton.IsEnabled = true;
+                    RemoveMeasurementButton.IsEnabled = true;
                     editOilAmount.Text = _currentMeasurement.oilAmount.ToString();
                     editDate.Text = _currentMeasurement.date != null ? _currentMeasurement.date.Value.ToString("dd:MM:yyyy") : DateTime.Now.ToString("dd:MM:yyyy");
                 }
@@ -132,12 +157,12 @@ namespace Oil_Consumption_Tracker
 
         void ValidateOilEdit(object sender, TextChangedEventArgs e)
         {
-            saveEditedMeasurement.IsEnabled = DateTime.TryParse(editDate.Text, out DateTime dateHolder) && double.TryParse(editOilAmount.Text, out double holder);
+            saveEditedMeasurement.IsEnabled = DateTime.TryParseExact(editDate.Text, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate) && double.TryParse(editOilAmount.Text, out double holder);
         }
 
         void ValidateOilAdd(object sender, TextChangedEventArgs e)
         {
-            saveAddedMeasurement.IsEnabled = DateTime.TryParse(addDate.Text,out DateTime dateHolder) && double.TryParse(addOilAmount.Text, out double holder);
+            saveAddedMeasurement.IsEnabled = DateTime.TryParseExact(addDate.Text, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate) && double.TryParse(addOilAmount.Text, out double holder);
         }
 
         void RemoveCar(object sender, RoutedEventArgs e)
@@ -162,53 +187,75 @@ namespace Oil_Consumption_Tracker
 
         void EditCar(object sender, RoutedEventArgs e)
         {
-            cars[cars.IndexOf(_currentCar)] = new Car(editRegisternumber.Text, editManufacturer.Text, editMotorcode.Text, _currentCar.measurements);
+            cars[cars.IndexOf(_currentCar)] = new Car(editRegisternumber.Text, editManufacturer.Text, editMotorcode.Text, _currentCar.Measurements);
             OpenWindow("mainMenuWindow");
             Serialize();
         }
 
         void RemoveMeasurement(object sender, RoutedEventArgs e)
         {
-            _currentCar.measurements.Remove(_currentMeasurement);
-            Serialize();
-            ShowGraph();
-        }
-
-        void AddMeasurement(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-                _currentCar.measurements.Add(new Measurement(double.Parse(addOilAmount.Text), DateTime.Parse(addDate.Text)))
-            );
-            ShowGraph();
-            Serialize();
-            OpenWindow("measurementWindow");
-        }
-
-        void EditMeasurement(object sender, RoutedEventArgs e)
-        {
-            double oilAmount = _currentMeasurement.oilAmount;
-            DateTime? date = _currentMeasurement.date;
-            bool validAmount = double.TryParse(editOilAmount.Text, out oilAmount);
-            DateTime holder = DateTime.Now;
-            bool validDate = DateTime.TryParse(editDate.Text, out holder);
-            date = holder;
-            if(validAmount && validDate)
+            if (currentCar != null && _currentMeasurement != null)
             {
-                _currentMeasurement = new Measurement(oilAmount,date);
-                OpenWindow("measurementWindow");
+                currentCar.Measurements.Remove(_currentMeasurement);
+                OnPropertyChanged(nameof(currentCar.Measurements)); // Notify UI
                 Serialize();
                 ShowGraph();
             }
         }
 
-        public void SortMeasurements()
+        void AddMeasurement(object sender, RoutedEventArgs e)
         {
-            currentCar.measurements = new ObservableCollection<Measurement>(
-                currentCar.measurements.OrderBy(m => m.date)
-            );
+            if (DateTime.TryParseExact(addDate.Text, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate) &&
+                double.TryParse(addOilAmount.Text, out double oilAmount))
+            {
+                Measurement newMeasurement = new Measurement(oilAmount, parsedDate);
+
+                currentCar.Measurements.Add(newMeasurement);
+                OnPropertyChanged(nameof(currentCar.Measurements)); // Notify UI
+
+                ShowGraph();
+                Serialize();
+            }
+            OpenWindow("measurementWindow");
         }
 
-    void Deserialize()
+        void EditMeasurement(object sender, RoutedEventArgs e)
+        {
+            //Poistaa tämänhetkisen
+            if (currentCar != null && _currentMeasurement != null)
+            {
+                currentCar.Measurements.Remove(_currentMeasurement);
+                OnPropertyChanged(nameof(currentCar.Measurements)); // Notify UI
+                Serialize();
+                ShowGraph();
+            }
+
+            if (DateTime.TryParseExact(editDate.Text, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate) &&
+                double.TryParse(editOilAmount.Text, out double oilAmount))
+            {
+                Measurement newMeasurement = new Measurement(oilAmount, parsedDate);
+
+                currentCar.Measurements.Add(newMeasurement);
+                OnPropertyChanged(nameof(currentCar.Measurements)); // Notify UI
+
+                ShowGraph();
+                Serialize();
+            }
+            OpenWindow("measurementWindow");
+        }
+
+        public void SortMeasurements()
+        {
+            var sortedList = currentCar.Measurements.OrderBy(m => m.date).ToList();
+            currentCar.Measurements.Clear();
+            foreach (var measurement in sortedList)
+            {
+                currentCar.Measurements.Add(measurement);
+            }
+            OnPropertyChanged(nameof(currentCar.Measurements)); // Notify UI
+        }
+
+        void Deserialize()
         {
             string filePath = "autot.json";
             if (File.Exists(filePath))
@@ -253,11 +300,11 @@ namespace Oil_Consumption_Tracker
             if (currentCar == null) return;
             SortMeasurements();
             PointCollection graphPoints = new PointCollection();
-            for (int i = 0; i < currentCar.measurements.Count; i++)
+            for (int i = 0; i < currentCar.Measurements.Count; i++)
             {
                 graphPoints.Add(new Point(
-                    i * Grahp.Width / currentCar.measurements.Count,
-                    Grahp.Height - currentCar.measurements[i].oilAmount / graphMaxHeight * Grahp.Height
+                    i * Grahp.Width / currentCar.Measurements.Count,
+                    Grahp.Height - currentCar.Measurements[i].oilAmount / graphMaxHeight * Grahp.Height
                 ));
             }
             Grahp.Points = graphPoints;
