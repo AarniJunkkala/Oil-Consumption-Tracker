@@ -1,12 +1,12 @@
 [
   {
     "registerNumber": "KJE-123",
-    "manufacturer": "No manufacturer found",
+    "manufacturer": "Volvo",
     "motorCode": "No motorcode found",
     "measurements": [
       {
         "oilAmount": 5.2999999999999998,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "date": "2025-04-02T00:00:00"
       },
       {
         "oilAmount": 4.7000000000000002,
@@ -20,35 +20,33 @@
   },
   {
     "registerNumber": "FIS-344",
-    "manufacturer": "No manufacturer found",
-    "motorCode": "No motorcode found",
+    "manufacturer": "Mersu",
+    "motorCode": "123123asbs23",
     "measurements": [
       {
-        "oilAmount": 10.4,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "oilAmount": 3,
+        "date": "1997-01-01T00:00:00"
       },
       {
-        "oilAmount": 8.1999999999999993,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "oilAmount": 3,
+        "date": "1998-01-01T00:00:00"
       },
       {
-        "oilAmount": 2.1000000000000001,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "oilAmount": 9,
+        "date": "1999-01-01T00:00:00"
       },
       {
-        "oilAmount": 4.2000000000000002,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "oilAmount": 9,
+        "date": "1999-01-01T00:00:00"
       },
       {
-        "oilAmount": 0.20000000000000001,
-        "date": "2025-03-02T17:21:25.237877+02:00"
+        "oilAmount": 9,
+        "date": "1999-01-01T00:00:00"
+      },
+      {
+        "oilAmount": 5,
+        "date": "2022-01-01T00:00:00"
       }
     ]
-  },
-  {
-    "registerNumber": "TEST-1234",
-    "manufacturer": "",
-    "motorCode": "",
-    "measurements": []
   }
 ]

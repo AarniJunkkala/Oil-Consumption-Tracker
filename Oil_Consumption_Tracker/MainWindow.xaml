@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Oil_Consumption_Tracker"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    
+
     <!-- Main window's visual interface
             -d: Visibility toggles window's visibility in the design/preview area above
             -Visibility toggles window's visibility in the program at runtime
@@ -15,7 +15,7 @@
             TO DO: 
             -min width & height etc. settings to ensure the user can't make the program look like shit when making the windows small or big 
             -small visual bug where the datagrid's leftmost column doesn't start from the left of the datagrid area and there is unnecessary empty space -->
-    
+
     <Grid x:Name="rootWindow">
         <Grid x:Name="mainMenuWindow" d:Visibility="Visible"  Visibility="Visible">
             <Grid.RowDefinitions>
@@ -28,7 +28,7 @@
             <Grid Grid.Row="0">
                 <TextBlock HorizontalAlignment="Center" Margin="25,0,0,0" TextWrapping="Wrap" Text="OCT — Oil Consumption Tracker" VerticalAlignment="Center" FontSize="36" FontFamily="Segoe UI"/>
             </Grid>
-            
+
             <Grid Grid.Row="1">
                 <Separator Height="2" Background="Black"  Margin="0,5"/>
             </Grid>
@@ -53,15 +53,17 @@
                 <DataGrid Grid.Row="1" Margin="20,0,0,0" Grid.Column="0" ItemsSource="{Binding cars}"
                           HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
                             AutoGenerateColumns="False"
-                          SelectedItem="{Binding SelectedCar}"
+                            CanUserAddRows="False"
+                            IsReadOnly="True"
+                            SelectedItem="{Binding currentCar, Mode=TwoWay}"
                             Name="AutoDataGrid"
+                            SelectionMode="Single"
                             RowDetailsVisibilityMode="VisibleWhenSelected">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Rekisterinumero" Binding="{Binding registerNumber}" />
                         <!-- three headers below need to binded to Car's properties like above + the properties need to be created for the car class if they don't exist yet -->
                         <DataGridTextColumn Header="Valmistaja" Binding="{Binding manufacturer}"/>
                         <DataGridTextColumn Header="Moottorikoodi" Binding="{Binding motorCode}"/>
-                        <DataGridTextColumn Header="Lisätty" />
                     </DataGrid.Columns>
                     <!-- TO DO:
                         -make datagrid read only, so that the user can't double click and edit car info here
@@ -69,10 +71,12 @@
                         -maybe add double click functionality to cars, so that it opens their graph window like Näytä tiedot button? -->
                 </DataGrid>
 
-                <!-- "Lisää auto" button -->
-                <Button Grid.Row="1" Grid.Column="1" Content="Lisää auto" Tag="addCarWindow" Click="OpenWindow"  HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Center" FontSize="30"/>
+                <!-- "Lisää, muokkaa ja poista auto" button -->
+                <Button Grid.Row="1" Grid.Column="1" Content="Lisää" Tag="addCarWindow" Click="OpenWindow"  HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Width="210"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Muokkaa" x:Name="EditCarButton" IsEnabled="False" Tag="editCarWindow" Click="OpenWindow"  HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Margin="0,62,0,0" Width="210"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Poista" x:Name="RemoveCarButton" IsEnabled="False" Click="RemoveCar" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" Margin="0,125,0,0" Width="210"/>
                 <!-- "Näytä tiedot" button -->
-                <Button Grid.Row="2" Grid.Column="0" Content="Näytä tiedot" Tag="graphWindow" Click="OpenWindow" Margin="20,7,0,10" HorizontalAlignment="Center" FontSize="15" />
+                <Button Grid.Row="1" Grid.Column="1" x:Name="DisplayNameButton" IsEnabled="False" Content="Mittaukset" Tag="measurementWindow" Click="OpenWindow" Margin="0,193,0,42" HorizontalAlignment="Center" FontSize="30" Width="209" />
                 <!-- TO DO:
                     -bind "Näytä tiedot" button to the car that is selected in the datagrid, so that it opens the data of the right car in the data/graph window 
                     -make the "Näytä tiedot" button active only when one car is selected -->
@@ -130,13 +134,13 @@
 
                 <Button Grid.Column="1" Content="Peruuta" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
                 <Button IsEnabled="false" Grid.Column="0" Content="Tallenna" x:Name="saveCarButton" Click="AddCar" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
-                
+
             </Grid>
-            
+
         </Grid>
 
         <!-- Data/graph window's visual inteface -->
-        <Grid x:Name="graphWindow" d:Visibility="Hidden" Visibility="Collapsed">
+        <Grid x:Name="measurementWindow" d:Visibility="Hidden" Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="2*"/>
@@ -144,8 +148,8 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                
-                <TextBlock Text="Mittausdata: [Rekisterinumero haetaan]" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <TextBlock x:Name="MittausDataText" Text="Mittausdata: [Rekisterinumero haetaan]" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="20,12,0,0" VerticalAlignment="Top"/>
             </Grid>
 
@@ -156,15 +160,20 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Datagrid on the left middle -->
-                <DataGrid Grid.Column="0" ItemsSource="{Binding measurements}"
-                AutoGenerateColumns="False"
-                Margin="20,0,20,0">
+                <DataGrid   Grid.Column="0"
+                            ItemsSource="{Binding currentCar.measurements}"
+                            SelectedItem="{Binding currentMeasurement, Mode=TwoWay}"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            IsReadOnly="True"
+                            SelectionMode="Single"
+                            Margin="20,0,20,0">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oilAmount}" />
-                        <DataGridTextColumn Header="Päiväys" Binding="{Binding date}" />
+                        <DataGridTextColumn Header="Päiväys" Binding="{Binding date , StringFormat=\{0:dd.MM.yyyy\}}" />
                     </DataGrid.Columns>
                 </DataGrid>
-                
+
                 <!-- The graph on middle right 
                     -TO DO: make the graph look nice and informative -->
                 <Polyline Grid.Column="1" x:Name="Grahp" Stroke="Blue" StrokeThickness="4" Width="400" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
@@ -176,9 +185,9 @@
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                    <Button Content="Lisää mittaus" Margin="0,0,80,0"/>
-                    <Button Content="Muokkaa mittausta" Margin="0,0,80,0"/>
-                    <Button Content="Poista mittaus" Margin="0,0,0,0"/>
+                    <Button Content="Lisää mittaus" Tag="addMeasurement" Click="OpenWindow" Margin="0,0,80,0"/>
+                    <Button Content="Muokkaa mittausta" x:Name="EditMeasurementButton" Tag="editMeasurementWindow" Click="OpenWindow" IsEnabled="False" Margin="0,0,80,0"/>
+                    <Button Content="Poista mittaus" x:Name="RemoveMeasurementButton" Click="RemoveMeasurement" IsEnabled="False" Margin="0,0,0,0"/>
                     <!-- TO DO:
                         -add functionality to above buttons
                         -create a new window (maybe using the same structure as Lisää auto window) that will pop up when Lisää mittaus button is pressed 
@@ -188,5 +197,151 @@
                 </StackPanel>
             </Grid>
         </Grid>
+
+        <!-- "Edit cars" window's visual interface -->
+        <Grid x:Name="editCarWindow" d:Visibility="Hidden" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBlock Text="Muokkaa auton tietoja" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Rekisterinumero" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="editRegisternumber" TextChanged="ValidateRegisternumber" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Valmistaja" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="editManufacturer" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="2" Grid.Column="0" Content="Moottorikoodi" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="editMotorcode" Grid.Row="2" Grid.Column="1" Margin="5, 5, 120, 5" />
+
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Tallenna ja Peruuta buttons
+            TO DO: 
+            -add functionality to Tallenna button so that it saves the new car data 
+            -add functionality to Peruuta button so that it functions exactly like Takaisin button does and then remove Takaisin button -->
+
+                <Button Grid.Column="1" Content="Peruuta" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
+                <Button Grid.Column="0" Content="Tallenna" x:Name="saveEditedCarButton" Click="EditCar" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
+
+            </Grid>
+
+        </Grid>
+
+        <!-- "Edit measurements" window's visual interface -->
+        <Grid x:Name="editMeasurementWindow" d:Visibility="Hidden" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Button Content="Takaisin" Tag="measurementWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBlock Text="Muokkaa öljynmittausta" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                
+                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn määrä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="editOilAmount" TextChanged="ValidateOilEdit" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Päivämäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="editDate" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Tallenna ja Peruuta buttons
+    TO DO: 
+    -add functionality to Tallenna button so that it saves the new car data 
+    -add functionality to Peruuta button so that it functions exactly like Takaisin button does and then remove Takaisin button -->
+
+                <Button Grid.Column="1" Content="Peruuta" Tag="measurementWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
+                <Button Grid.Column="0" Content="Tallenna" x:Name="saveEditedMeasurement" Click="EditMeasurement" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
+
+            </Grid>
+
+        </Grid>
+
+        <!-- "Add measurement" window's visual interface -->
+        <Grid x:Name="addMeasurement" d:Visibility="Hidden" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Button Content="Takaisin" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBlock Text="Lisää uusi mittaus" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn määrä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="addOilAmount" TextChanged="ValidateOilAdd" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
+                <Label Grid.Row="1" Grid.Column="0" Content="Päivämäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <TextBox x:Name="addDate" TextChanged="ValidateOilAdd" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!-- Tallenna ja Peruuta buttons
+            TO DO: 
+            -add functionality to Tallenna button so that it saves the new car data 
+            -add functionality to Peruuta button so that it functions exactly like Takaisin button does and then remove Takaisin button -->
+
+                <Button Grid.Column="1" Content="Peruuta" Tag="mainMenuWindow" Click="OpenWindow" HorizontalAlignment="Left" Margin="30,0,0,0"  VerticalAlignment="Center"/>
+                <Button IsEnabled="false" Grid.Column="0" Content="Tallenna" x:Name="saveAddedMeasurement" Click="AddMeasurement" HorizontalAlignment="Right" Margin="0,0,30,0"  VerticalAlignment="Center"/>
+
+            </Grid>
+
+        </Grid>
+
     </Grid>
 </Window>
