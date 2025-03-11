@@ -84,7 +84,7 @@
             </Grid>
 
             <Grid Grid.Row="4">
-                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="Päivitetty viimeksi xx.xx.xxxx" VerticalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="Versio 1.0" VerticalAlignment="Center"/>
             </Grid>
 
         </Grid>
@@ -219,7 +219,7 @@
                             SelectionMode="Single"
                             Margin="20,0,20,0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Öljyn määrä" Binding="{Binding oilAmount}" />
+                        <DataGridTextColumn Header="Öljyn täyttömäärä" Binding="{Binding oilAmount}" />
                         <DataGridTextColumn Header="Päiväys" Binding="{Binding date , StringFormat=\{0:dd.MM.yyyy\}}" />
                     </DataGrid.Columns>
                 </DataGrid>
@@ -272,7 +272,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn määrä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn täyttömäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
                 <TextBox x:Name="addOilAmount" TextChanged="ValidateOilAdd" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
                 <Label Grid.Row="1" Grid.Column="0" Content="Päivämäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
                 <TextBox x:Name="addDate" TextChanged="ValidateOilAdd" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
@@ -320,7 +320,7 @@
                 </Grid.ColumnDefinitions>
 
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn määrä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
+                <Label Grid.Row="0" Grid.Column="0" Content="Öljyn täyttömäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
                 <TextBox x:Name="editOilAmount" TextChanged="ValidateOilEdit" Grid.Row="0" Grid.Column="1" Margin="5, 5, 120, 5" />
                 <Label Grid.Row="1" Grid.Column="0" Content="Päivämäärä" Margin="120, 5, 0, 5" VerticalAlignment="Center" />
                 <TextBox x:Name="editDate" TextChanged="ValidateOilEdit" Grid.Row="1" Grid.Column="1" Margin="5, 5, 120, 5" />
